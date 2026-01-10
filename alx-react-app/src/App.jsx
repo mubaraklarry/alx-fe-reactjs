@@ -1,13 +1,13 @@
-import WelcomeMessage from './components/WelcomeMessage';  // ← Add this line
+import Header from './Header';
+import MainContent from './MainContent';
+import Footer from './Footer';
 
 function App() {
   return (
     <>
-      <WelcomeMessage />   {/* ← Add this line */}
-      
-      {/* You can keep or remove the original content */}
-      <h1>Vite + React</h1>
-      {/* ... rest of the default content ... */}
+      <Header />
+      <MainContent />
+      <Footer />
     </>
   );
 }
