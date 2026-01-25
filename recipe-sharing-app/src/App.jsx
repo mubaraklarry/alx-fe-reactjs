@@ -1,10 +1,16 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import AddRecipeForm from './components/AddRecipeForm';
-import RecipeList from './components/RecipeList';
-import RecipeDetails from './components/RecipeDetails';
+// ... existing imports ...
+import FavoritesList from './components/FavoritesList';
+import RecommendationsList from './components/RecommendationsList';
 import SearchBar from './components/SearchBar';
 
 function App() {
+  const generateRecommendations = useRecipeStore(state => state.generateRecommendations);
+
+  // Generate recommendations when home loads
+  useEffect(() => {
+    generateRecommendations();
+  }, []);
+
   return (
     <BrowserRouter>
       <div style={{ maxWidth: '700px', margin: '0 auto', padding: '24px' }}>
@@ -18,6 +24,8 @@ function App() {
                 <AddRecipeForm />
                 <SearchBar />
                 <RecipeList />
+                <FavoritesList />
+                <RecommendationsList />
               </>
             }
           />

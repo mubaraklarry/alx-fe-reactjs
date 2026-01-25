@@ -1,74 +1,56 @@
 import { create } from 'zustand';
 
 const STORAGE_KEY = 'recipes';
+const FAVORITES_KEY = 'favorites';
 
 const useRecipeStore = create((set, get) => {
-  // Load saved recipes from localStorage when store is created
-  const saved = localStorage.getItem(STORAGE_KEY);
-  const initialRecipes = saved ? JSON.parse(saved) : [];
+  // Load from localStorage
+  const savedRecipes = localStorage.getItem(STORAGE_KEY);
+  const savedFavorites = localStorage.getItem(FAVORITES_KEY);
+  const initialRecipes = savedRecipes ? JSON.parse(savedRecipes) : [];
+  const initialFavorites = savedFavorites ? JSON.parse(savedFavorites) : [];
 
   return {
     recipes: initialRecipes,
+    favorites: initialFavorites,
     searchTerm: '',
     filteredRecipes: initialRecipes,
+    recommendations: [],
 
-    // Add new recipe + save
     addRecipe: (newRecipe) => {
       set((state) => {
-        const updatedRecipes = [...state.recipes, newRecipe];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedRecipes));
-        return {
-          recipes: updatedRecipes,
-          filteredRecipes: state.searchTerm
-            ? updatedRecipes.filter(r =>
-                r.title.toLowerCase().includes(state.searchTerm.toLowerCase())
-              )
-            : updatedRecipes
-        };
+        const updated = [...state.recipes, newRecipe];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return { recipes: updated, filteredRecipes: updated };
       });
     },
 
-    // Update recipe + save
     updateRecipe: (id, updatedFields) => {
       set((state) => {
-        const updatedRecipes = state.recipes.map((r) =>
-          r.id === id ? { ...r, ...updatedFields } : r
-        );
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedRecipes));
-        return {
-          recipes: updatedRecipes,
-          filteredRecipes: state.searchTerm
-            ? updatedRecipes.filter(r =>
-                r.title.toLowerCase().includes(state.searchTerm.toLowerCase())
-              )
-            : updatedRecipes
-        };
+        const updated = state.recipes.map(r => r.id === id ? { ...r, ...updatedFields } : r);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return { recipes: updated, filteredRecipes: updated };
       });
     },
 
-    // Delete recipe + save
     deleteRecipe: (id) => {
       set((state) => {
-        const updatedRecipes = state.recipes.filter((r) => r.id !== id);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedRecipes));
-        return {
-          recipes: updatedRecipes,
-          filteredRecipes: state.searchTerm
-            ? updatedRecipes.filter(r =>
-                r.title.toLowerCase().includes(state.searchTerm.toLowerCase())
-              )
-            : updatedRecipes
+        const updated = state.recipes.filter(r => r.id !== id);
+        const updatedFavorites = state.favorites.filter(favId => favId !== id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(updatedFavorites));
+        return { 
+          recipes: updated, 
+          favorites: updatedFavorites,
+          filteredRecipes: updated 
         };
       });
     },
 
-    // Set search term + filter immediately
     setSearchTerm: (term) => {
       set((state) => {
-        const lowerTerm = term.toLowerCase();
-        const filtered = state.recipes.filter((r) =>
-          r.title.toLowerCase().includes(lowerTerm)
-        );
+        const lower = term.toLowerCase();
+        const filtered = state.recipes.filter(r => r.title.toLowerCase().includes(lower));
         return {
           searchTerm: term,
           filteredRecipes: term.trim() === '' ? state.recipes : filtered
@@ -76,13 +58,31 @@ const useRecipeStore = create((set, get) => {
       });
     },
 
-    // Optional: clear all data (for testing)
-    clearRecipes: () => {
-      localStorage.removeItem(STORAGE_KEY);
-      set({
-        recipes: [],
-        filteredRecipes: [],
-        searchTerm: ''
+    addFavorite: (recipeId) => {
+      set((state) => {
+        if (state.favorites.includes(recipeId)) return state;
+        const updated = [...state.favorites, recipeId];
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(updated));
+        return { favorites: updated };
+      });
+    },
+
+    removeFavorite: (recipeId) => {
+      set((state) => {
+        const updated = state.favorites.filter(id => id !== recipeId);
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(updated));
+        return { favorites: updated };
+      });
+    },
+
+    generateRecommendations: () => {
+      set((state) => {
+        // Simple logic: show non-favorite recipes (you can improve later)
+        const recommended = state.recipes
+          .filter(r => !state.favorites.includes(r.id))
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 3);
+        return { recommendations: recommended };
       });
     }
   };
