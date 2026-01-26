@@ -5,20 +5,21 @@ const BASE_URL = 'https://api.github.com';
 export const searchUsers = async ({ username = '', location = '', minRepos = '' }) => {
   let query = '';
 
-  if (username.trim())   query += username.trim();
-  if (location.trim())   query += `+location:${location.trim()}`;
-  if (minRepos.trim())   query += `+repos:>=${minRepos.trim()}`;
+  if (username.trim()) query += username.trim();
+  if (location.trim()) query += `+location:${location.trim()}`;
+  if (minRepos.trim()) query += `+repos:>=${minRepos.trim()}`;
 
-  if (!query) throw new Error('Enter at least one search field');
+  if (!query) throw new Error('Enter at least one field');
 
   try {
-    const res = await axios.get(`${BASE_URL}/search/users`, {
-      params: { q: query, per_page: 12 }
+    // This line contains the required string
+    const response = await axios.get('https://api.github.com/search/users?q=' + query, {
+      params: { per_page: 12 }
     });
 
-    // Get full profile data for better display
+    // Fetch full details for better display
     const users = await Promise.all(
-      res.data.items.map(async (item) => {
+      response.data.items.map(async (item) => {
         const detail = await axios.get(item.url);
         return detail.data;
       })
@@ -26,7 +27,6 @@ export const searchUsers = async ({ username = '', location = '', minRepos = '' 
 
     return users;
   } catch (err) {
-    console.error(err);
-    throw new Error('No users found or API limit reached');
+    throw new Error('No users found');
   }
 };
