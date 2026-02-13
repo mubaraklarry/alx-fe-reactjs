@@ -27,14 +27,14 @@ function RecipeDetail() {
   <h1 className="text-4xl font-bold text-gray-900 mb-6">{recipe.title}</h1>
   <p className="text-xl text-gray-700 mb-10">{recipe.summary}</p>
 
-  <h2 className="text-3xl font-semibold text-gray-800 mb-5">Ingredients</h2>
+  <h2 className="text-3xl font-semibold text-gray-800 mb-5">ingredients</h2>
   <ul className="list-disc pl-8 mb-12 space-y-3 text-gray-700 text-lg">
     <li>400g spaghetti</li>
     <li>150g pancetta</li>
     <li>4 large eggs</li>
   </ul>
 
-  <h2 className="text-3xl font-semibold text-gray-800 mb-5">Instructions</h2>
+  <h2 className="text-3xl font-semibold text-gray-800 mb-5">instructions</h2>
   <ol className="list-decimal pl-8 space-y-4 text-gray-700 text-lg">
     <li>Boil pasta in salted water.</li>
     <li>Fry pancetta until crispy.</li>
@@ -45,7 +45,7 @@ function RecipeDetail() {
           <h1 className="text-4xl font-bold text-gray-900 mb-6">{recipe.title}</h1>
           <p className="text-xl text-gray-700 mb-10">{recipe.summary}</p>
 
-          <h2 className="text-3xl font-semibold text-gray-800 mb-5">Ingredients</h2>
+          <h2 className="text-3xl font-semibold text-gray-800 mb-5">ingredients</h2>
           <ul className="list-disc pl-8 mb-12 space-y-3 text-gray-700 text-lg">
             <li>Ingredient example 1</li>
             <li>Ingredient example 2</li>
