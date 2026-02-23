@@ -15,7 +15,7 @@ function TodoList() {
 
     setTodos([
       ...todos,
-      { id: Date.now(), text: newTodo, completed: false }
+      { id: Date.now(), text: newTodo.trim(), completed: false }
     ]);
     setNewTodo('');
   };
@@ -43,6 +43,7 @@ function TodoList() {
           onChange={(e) => setNewTodo(e.target.value)}
           placeholder="Add a new todo..."
           className="flex-1 p-3 border rounded-l-lg focus:outline-none focus:border-blue-500"
+          data-testid="todo-input"
         />
         <button
           type="submit"
@@ -55,29 +56,33 @@ function TodoList() {
       <ul className="space-y-3">
         {todos.map(todo => (
           <li
-  key={todo.id}
-  className="flex items-center justify-between p-4 bg-white rounded-lg shadow"
->
-  <div className="flex items-center flex-1">
-    <input
-      type="checkbox"
-      checked={todo.completed}
-      onChange={() => toggleTodo(todo.id)}
-      className="mr-4 h-5 w-5"
-    />
-    <span
-      className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : ''}`}
-    >
-      {todo.text}
-    </span>
-  </div>
-  <button
-    onClick={() => deleteTodo(todo.id)}
-    className="text-red-600 hover:text-red-800 font-medium ml-4"
-  >
-    Delete
-  </button>
-</li>
+            key={todo.id}
+            className="flex items-center justify-between p-4 bg-white rounded-lg shadow"
+            data-testid={`todo-item-${todo.id}`}
+          >
+            <div className="flex items-center flex-1">
+              <input
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() => toggleTodo(todo.id)}
+                className="mr-4 h-5 w-5"
+                data-testid={`toggle-${todo.id}`}
+              />
+              <span
+                className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : ''}`}
+                data-testid={`text-${todo.id}`}
+              >
+                {todo.text}
+              </span>
+            </div>
+            <button
+              onClick={() => deleteTodo(todo.id)}
+              className="text-red-600 hover:text-red-800 font-medium ml-4"
+              data-testid={`delete-${todo.id}`}
+            >
+              Delete
+            </button>
+          </li>
         ))}
       </ul>
     </div>
