@@ -17,8 +17,10 @@ function PostsComponent() {
   } = useQuery({
     queryKey: ['posts'],
     queryFn: fetchPosts,
-    staleTime: 1000 * 60 * 5, // 5 minutes cache
-    gcTime: 1000 * 60 * 10     // 10 minutes garbage collection
+    staleTime: 1000 * 60 * 5,          // 5 minutes
+    cacheTime: 1000 * 60 * 10,         // 10 minutes
+    refetchOnWindowFocus: false,       // disable auto refetch on focus
+    keepPreviousData: true             // keep old data during refetch
   })
 
   return (
@@ -30,7 +32,7 @@ function PostsComponent() {
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition"
           >
             {isFetching ? 'Refreshing...' : 'Refresh Posts'}
           </button>
