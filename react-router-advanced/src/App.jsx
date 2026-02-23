@@ -85,6 +85,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
           <Route path="login" element={<Login />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
 
           {/* Protected + Nested */}
           <Route
